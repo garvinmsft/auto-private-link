@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/cmd/apl",
+            "env": {
+                "KUB_VNET_RESOURCE_GROUP": "apl-group",
+                "KUB_VNET_NAME": "apl-group-vnet",
+                "NAT_SUBNET_NAME":"auto-private-link",
+                "NAT_SUBNET_PREFIX": "10.241.255.0/27",
+                "KUB_INTERNAL_LOADBALANCER_RESOURCE_GROUP":"MC_apl-group_apl-cluster_eastus",
+                "KUB_INTERNAL_LOADBALANCER_NAME":"kubernetes-internal",
+                "SYNC_DELAY_SECONDS":"5",
+                "AZURE_AUTH_LOCATION": "[Insert Path]/.azure/azureAuth.json"
+                
+            },
+            "args": [
+                "--kubeconfig=[Insert Path]/.kube/config",
+                "--verbosity=5"
+            ]
+        }
+    ]
+}

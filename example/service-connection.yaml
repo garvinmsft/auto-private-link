@@ -1,0 +1,9 @@
+apiVersion: apl.garvinmsft.github.com/v1alpha1
+kind: ServiceConnection
+metadata:
+  name: example-sc
+spec:
+  serviceName: internal-app
+  resourceGroup: "apl-group"
+  vnetName: "apl-conn-vnet"
+  subnetName: "default"
