@@ -238,9 +238,10 @@ func (azCtx AzContext) RemoveService(service *v1.Service) error {
 	}
 
 	for _, item := range *apl.PrivateEndpointConnections {
-		future, err := azCtx.PrivateEndpointsClient.Delete(ctx,
+		future, err := azCtx.PrivateLinkServicesClient.DeletePrivateEndpointConnection(ctx,
 			azCtx.cfg.LoadBalancerResourceGroup,
-			*item.PrivateEndpoint.Name,
+			service.Name,
+			*item.Name,
 		)
 
 		if err != nil {

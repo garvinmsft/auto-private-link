@@ -33,7 +33,7 @@ var (
 	flags          = pflag.NewFlagSet("auto-private-link", pflag.ExitOnError)
 	kubeConfigFile = flags.String("kubeconfig", "", "Path to kubeconfig file with authorization and master location information.")
 	versionInfo    = flags.Bool("version", false, "Print version")
-	verbosity      = flags.Int(verbosityFlag, 5, "Set logging verbosity level")
+	verbosity      = flags.Int(verbosityFlag, 1, "Set logging verbosity level") //Have not figured this out yet
 )
 
 func main() {
@@ -42,7 +42,6 @@ func main() {
 	if err := flags.Parse(os.Args); err != nil {
 		klog.Fatal("Error parsing command line arguments:", err)
 	}
-	//ctx := context.TODO()
 
 	kubeCfg, err:= clientcmd.BuildConfigFromFlags("", *kubeConfigFile)
 

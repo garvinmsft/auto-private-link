@@ -72,6 +72,13 @@ func New(
 					s.enqueueService(svcCur)
 				}
 			},
+			DeleteFunc: func(cur interface{}) {
+				svc, ok := cur.(*v1.Service)
+				
+				if ok && shouldProcess(svc, cfg.ServiceAnnotation) {
+					s.enqueueService(svc)
+				}
+			},
 		},
 		cfg.SyncPeriod,
 	)
@@ -144,11 +151,10 @@ func (s *Controller) syncService(key string) error {
 
 	service, err := s.serviceLister.Services(namespace).Get(name)
 	if err != nil {
-		// The Foo resource may no longer exist, in which case we stop
-		// processing.
+		
 		if errors.IsNotFound(err) {
 			klog.V(5).Infof("Service '%s' in work queue no longer exists", key)
-			return s.cleanupService(service)
+			return nil
 		}
 
 		if !shouldProcess(service, s.cfg.ServiceAnnotation) {
