@@ -29,7 +29,7 @@ jobs:
       - name: Run tests
         run: |
           if [ -f docker-compose.test.yml ]; then
-            docker-compose -f docker-compose.test.yaml up --force-recreate --exit-code-from test-runner --build test-runner
+            docker-compose -f docker-compose.test.yml up --force-recreate --exit-code-from test-runner --build test-runner
           else
             docker build . --file Dockerfile
           fi
