@@ -1,6 +1,6 @@
 module github.com/garvinmsft/auto-private-link
 
-go 1.13
+go 1.15
 
 require (
 	github.com/Azure/azure-sdk-for-go v43.2.0+incompatible
@@ -18,11 +18,8 @@ require (
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	k8s.io/api v0.18.2
 	k8s.io/apimachinery v0.18.2
-
 	k8s.io/client-go v0.18.2
-
 	k8s.io/code-generator v0.18.1
-
 	k8s.io/gengo v0.0.0-20200205140755-e0e292d8aa12 // indirect
 	k8s.io/klog v1.0.0
 	k8s.io/sample-controller v0.17.0

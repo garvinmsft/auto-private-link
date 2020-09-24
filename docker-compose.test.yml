@@ -1,0 +1,8 @@
+version: '2'
+#docker-compose -f docker-compose.test.yml up --force-recreate --exit-code-from test-runner --build test-runner
+services:
+  test-runner:
+    build: 
+      context: .
+      dockerfile: Dockerfile.test.yml
+   

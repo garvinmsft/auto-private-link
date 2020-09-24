@@ -148,8 +148,7 @@ func Packages(context *generator.Context, arguments *args.GeneratorArgs) generat
 	}
 
 	for i := range inputs {
-		klog.V(5).Infof("Considering h pkg %q", i)
-		klog.V(5).Info("Context.Universe %v", context.Universe)
+		klog.V(5).Infof("Considering pkg %q", i)
 		pkg := context.Universe[i]
 		if pkg == nil {
 			// If the input had no Go files, for example.
@@ -176,7 +175,7 @@ func Packages(context *generator.Context, arguments *args.GeneratorArgs) generat
 			// If the pkg-scoped tag did not exist, scan all types for one that
 			// explicitly wants generation.
 			for _, t := range pkg.Types {
-				klog.V(5).Infof("  considering df type %q", t.Name.String())
+				klog.V(5).Infof("  considering type %q", t.Name.String())
 				ttag := extractEnabledTypeTag(t)
 				if ttag != nil && ttag.value == "true" {
 					klog.V(5).Infof("    tag=true")

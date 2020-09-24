@@ -1,0 +1,6 @@
+FROM golang:1.15 as build
+RUN apt-get update
+RUN apt-get install -y ca-certificates openssl
+WORKDIR /build
+ADD . .
+CMD ["go", "build", "-o", "auto-private-link", "cmd/apl/main.go"] 
