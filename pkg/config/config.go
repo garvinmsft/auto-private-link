@@ -34,7 +34,7 @@ const (
 	ServiceAnnotationEnvName = "SERVICE_ANNOTATION"
 
 	//VnetResourceGroupEnvName resource group where the vnet is located
-	VnetResourceGroupEnvName = "KUB_VNET_RESOURCE_GROUP"
+	VnetResourceGroupEnvName = "KUB_VNET_RESOURCE_GROUP_NAME"
 
 	//VnetEnvName is the name of the vnet conaining the apl NAT subnet
 	VnetEnvName = "KUB_VNET_NAME"

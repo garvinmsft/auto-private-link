@@ -1,0 +1,39 @@
+{{- if required "A valid auto private link entry is required!" .Values.autoPrivateLink }}
+{{- end }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "auto-private-link.configmapname" . }}
+  labels:
+    app: {{ template "auto-private-link.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+data:
+  KUB_VNET_RESOURCE_GROUP:  {{ .Values.autoPrivateLink.network.vnetResourceGroupName | quote }}
+  KUB_VNET_NAME: {{ .Values.autoPrivateLink.network.vnetName | quote }}
+  KUB_INTERNAL_LOADBALANCER_RESOURCE_GROUP: {{ .Values.autoPrivateLink.network.loadBalancerName | quote }}
+  KUB_INTERNAL_LOADBALANCER_NAME:  {{ .Values.autoPrivateLink.network.loadBalancerName | quote }}
+  NAT_SUBNET_NAME: {{ .Values.autoPrivateLink.network.natSubnetName | quote }}
+
+  {{- if .Values.autoPrivateLink.network.natSubnetPrefix }}
+  NAT_SUBNET_PREFIX: {{ .Values.autoPrivateLink.network.natSubnetPrefix | quote }}
+  {{- end }}
+
+  {{- if .Values.kubernetes.syncPeriod }}
+  SYNC_DELAY_SECONDS: {{ .Values.kubernetes.syncPeriod | quote }}
+  {{- end }}
+
+  {{- if .Values.kubernetes.minRetrydelay }}
+  MIN_RETRY_DELAY_SECONDS: {{ .Values.kubernetes.minRetrydelay | quote }}
+  {{- end }}
+
+  {{- if .Values.kubernetes.maxRetrydelay }}
+  MAX_RETRY_DELAY_SECONDS: {{ .Values.kubernetes.maxRetrydelay | quote }}
+  {{- end }}
+  
+  {{- if .Values.autoPrivateLink.serviceAnnotation }}
+  SERVICE_ANNOTATION:  {{ .Values.autoPrivateLink.serviceAnnotation | quote }}
+  {{- end }}
+

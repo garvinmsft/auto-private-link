@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "auto-private-link.fullname" . }}
+  labels:
+    {{- include "auto-private-link.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "auto-private-link.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "auto-private-link.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: AZURE_AUTH_LOCATION
+            value: /etc/auto-private-link/auth/armAuth.json
+          envFrom:
+          - configMapRef:
+              name: {{ template "auto-private-link.configmapname" . }}
+          volumeMounts:
+          - name: azure-auth-sp
+            mountPath: /etc/auto-private-link/auth
+            readOnly: true
+      volumes:
+      - name: azure-auth-sp
+        secret:
+          secretName: auto-private-link-azure-sp

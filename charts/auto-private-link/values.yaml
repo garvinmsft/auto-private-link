@@ -1,0 +1,43 @@
+# Default values for auto-private-link.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: ghcr.io/garvinmsft/auto-private-link
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+podAnnotations: {}
+
+# All durations in seconds
+kubernetes:
+  syncPeriod: 30
+  minRetrydelay: 5
+  maxRetryDelay: 300
+
+autoPrivateLink:
+  serviceAnnotation: garvinmsft.github.com/apl
+  network:
+    #name of k8s vnet or vnet peered to k8s vnet
+    vnetName: k8s-vnet 
+
+    #resource group of k8s vnet or vnet peered to k8s vnet
+    vnetResourceGroupName: k8s-RG 
+
+     #name of subnet in  k8s vnet or vnet peered to k8s vnet used for private link NAT
+    natSubnetName: apl-nat-subnet
+
+     #address range for private link NAT. Only needed if subnet not already created
+    natSubnetPrefix: 10.241.255.0/27
+
+    #name of the internal kubernetes load balancer
+    loadBalancerName: kubernetes-internal 
+
+    #resource group of the internal kubernetes load balancer
+    loadBalancerResourceGroup: MC_apl-group_apl-cluster_eastus 
+armAuth:
+  secretJSON: '<<Generate this value with: az ad sp create-for-rbac --subscription <subscription-uuid> --sdk-auth | base64 -w0 >>'
