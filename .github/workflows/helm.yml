@@ -3,7 +3,7 @@ name: Helm
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   chart:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Checkout master
+      - name: Checkout main
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
