@@ -5,16 +5,19 @@ The Auto Private Link controller looks for annotated Kubernetes services and cre
 
 
 ## Setup
+aksClusterName="apl-cluster"
+aksResourceGroup="private-link-test"
+
 Create an AKS cluster using the Azure CLI if you don't already have one 
 ```bash
 #Resource Group
-az group create --name private-link-test --location eastus
+az group create --name $aksResourceGroup --location eastus
 
 #Cluster 
-az aks create --resource-group private-link-test --name apl-cluster --node-count 1 --generate-ssh-keys
+az aks create --resource-group $aksResourceGroup --name $aksClusterName --node-count 1 --generate-ssh-keys
 
 #Connect to cluster
-az aks get-credentials --resource-group private-link-test --name apl-cluster
+az aks get-credentials --resource-group $aksResourceGroup--name $aksClusterName
 
 ```
 Deploy an internally loadbalanced service to the AKS cluster. This will create an internal loadblancer in the AKS node resource group. Use the yaml below as an example. Please pay attention to the required annotations.
@@ -71,8 +74,6 @@ The private link service requires a subnet to NAT traffic to the AKS cluster fro
 ### Install Using Helm
 Get required values related to the AKS cluster
 ```bash
-aksClusterName="apl-cluster"
-aksResourceGroup="private-link-test"
 
 nodeResourceGroup=$(az aks show -n $aksClusterName -g $aksResourceGroup -o tsv --query "nodeResourceGroup")
 aksVnetName=$(az network vnet list -g $nodeResourceGroup -o tsv --query "[0].name")
