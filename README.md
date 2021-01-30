@@ -125,6 +125,7 @@ autoPrivateLink:
     #resource group of the internal kubernetes load balancer
     loadBalancerResourceGroup: <nodeResourceGroup> #Change this 
 armAuth:
+    #this will also support pod identity in the future.
   secretJSON: '<<Generate this value with: az ad sp create-for-rbac --sdk-auth | base64 -w0 >>'
 ```
 
