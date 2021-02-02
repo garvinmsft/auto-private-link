@@ -1,0 +1,35 @@
+{{- if .Values.rbac.enabled -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: {{ template "auto-private-link.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: {{ template "auto-private-link.fullname" . }}
+rules:
+- apiGroups:
+    - ""
+  resources:
+    - services
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups:
+    - "apl.garvinmsft.github.com"
+  resources:
+    - "*"
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups:
+    - ""
+  resources:
+    - events
+  verbs:
+    - create
+    - patch
+{{- end -}}

@@ -4,22 +4,23 @@ import (
 	//"context"
 	"os"
 	"time"
-	"k8s.io/klog"
+
 	"github.com/spf13/pflag"
 	kubeinformers "k8s.io/client-go/informers"
+	"k8s.io/client-go/rest"
+	"k8s.io/klog"
 
-	"k8s.io/client-go/kubernetes" 
+	"k8s.io/client-go/kubernetes"
 
-	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/sample-controller/pkg/signals"
-	clientset "github.com/garvinmsft/auto-private-link/pkg/generated/clientset/versioned"
-	informers "github.com/garvinmsft/auto-private-link/pkg/generated/informers/externalversions"
-	"github.com/garvinmsft/auto-private-link/pkg/config"
 	"github.com/garvinmsft/auto-private-link/pkg/azure"
-	"github.com/garvinmsft/auto-private-link/pkg/k8scontext"
+	"github.com/garvinmsft/auto-private-link/pkg/config"
 	"github.com/garvinmsft/auto-private-link/pkg/controller/connection"
 	"github.com/garvinmsft/auto-private-link/pkg/controller/service"
-
+	clientset "github.com/garvinmsft/auto-private-link/pkg/generated/clientset/versioned"
+	informers "github.com/garvinmsft/auto-private-link/pkg/generated/informers/externalversions"
+	"github.com/garvinmsft/auto-private-link/pkg/k8scontext"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/sample-controller/pkg/signals"
 )
 
 
@@ -34,19 +35,30 @@ var (
 	kubeConfigFile = flags.String("kubeconfig", "", "Path to kubeconfig file with authorization and master location information.")
 	versionInfo    = flags.Bool("version", false, "Print version")
 	verbosity      = flags.Int(verbosityFlag, 1, "Set logging verbosity level") //Have not figured this out yet
+	inCluster      = flags.Bool("in-cluster", true, "If running in a Kubernetes cluster, use the pod secrets for creating a Kubernetes client. Optional.")
 )
 
 func main() {
 	defer klog.Flush()
-
-	if err := flags.Parse(os.Args); err != nil {
+	var err error
+	if err = flags.Parse(os.Args); err != nil {
 		klog.Fatal("Error parsing command line arguments:", err)
 	}
 
-	kubeCfg, err:= clientcmd.BuildConfigFromFlags("", *kubeConfigFile)
+	var kubeCfg *rest.Config = &rest.Config{}
 
-	if err!= nil {
-		klog.Fatal("Error loading kubernetes config:", err)
+	if *inCluster {
+		kubeCfg, err = rest.InClusterConfig()
+		if err != nil {
+			klog.Fatal("Error creating in-cluster client configuration:", err)
+		}
+	
+	} else {
+		kubeCfg, err= clientcmd.BuildConfigFromFlags("", *kubeConfigFile)
+
+		if err!= nil {
+			klog.Fatal("Error loading kubernetes config:", err)
+		}
 	}
 
 	kubeClient := kubernetes.NewForConfigOrDie(kubeCfg)
